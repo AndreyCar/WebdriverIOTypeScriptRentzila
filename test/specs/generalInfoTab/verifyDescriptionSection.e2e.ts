@@ -1,9 +1,11 @@
 import { expect } from '@wdio/globals'
 import homePage from '../../pageobjects/home.page';
 import profilePage from '../../pageobjects/profile.page';
+import { faker } from '@faker-js/faker';
 
-describe('id:C318 - Verify description section', () => {
+describe('Verify description section', () => {
     before(async () => {
+        
         await browser.url('/create-unit/');
         await homePage.emailField.waitForDisplayed({ timeout: 5000 });
         await homePage.passwordField.waitForDisplayed({ timeout: 5000 });
@@ -14,7 +16,7 @@ describe('id:C318 - Verify description section', () => {
         await homePage.submitButton.click();
     });
 
-    it('1. Check title to be visible, have valid text. Check that textarea to be clickable and clear.', async () => {
+    it('id:C318 - Verify description section', async () => {
         const title = profilePage.descriptionTitle; 
         await expect(title).toBeDisplayedInViewport();
         await expect(title).toHaveText('Детальний опис');
@@ -22,9 +24,7 @@ describe('id:C318 - Verify description section', () => {
         await expect(profilePage.descriptionCustomTextArea).toBeDisplayed();
         await expect(profilePage.descriptionCustomTextArea).toBeClickable();
         await expect(profilePage.descriptionCustomTextArea).toHaveText(''); 
-    });
-
-    it('2. Type data: <>{};^ (special symbols) and check field content. Repeat actions with copy-paste.', async () => {
+   
         const specialSymbolsInput = '<>{};^';
         const textArea = profilePage.descriptionCustomTextArea;
 
@@ -43,16 +43,14 @@ describe('id:C318 - Verify description section', () => {
         await browser.keys(['Control', 'v']); 
 
         await expect(await textArea.getValue()).toEqual('');
-    });
+    
+        const longInput = faker.string.alpha({ length: 9001 });
+        const textArea1 = profilePage.descriptionCustomTextArea;
 
-    it('3. Type 9001 symbols into textarea and check limit.', async () => {
-        const longInput = 'a'.repeat(9001); 
-        const textArea = profilePage.descriptionCustomTextArea;
+        await textArea1.clearValue();
+        await textArea1.setValue(longInput);
 
-        await textArea.clearValue();
-        await textArea.setValue(longInput);
-
-        const textAreaValue = await textArea.getValue();
+        const textAreaValue = await textArea1.getValue();
         expect(textAreaValue.length).toBeLessThanOrEqual(9000);
     });
 });

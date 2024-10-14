@@ -1,8 +1,6 @@
 import { expect } from '@wdio/globals'
 import homePage from '../../pageobjects/home.page';
 
-require('dotenv').config();
-
 const validPhoneNumber = `${process.env.ADMIN_PASSWORD}`;
 
 const invalidPhoneNumbers = [
@@ -17,17 +15,15 @@ const invalidPhoneNumbers = [
     validPhoneNumber.replace('+380', '+').slice(0, -3), 
 ];
 
-describe('id:C207 - Authorization with invalid phone', () => {
-    it('1. Enter the existing password in the ""Пароль"" field', async () => {
+describe('Authorization with invalid phone', () => {
+    it('id:C207 - Authorization with invalid phone', async () => {
         await homePage.clickLoginButton();
 
         await homePage.passwordField.setValue(`${process.env.ADMIN_PASSWORD}`);
 
         await homePage.hiddenPasswordIcon.click();
         await expect(await homePage.passwordField.getValue()).toEqual(`${process.env.ADMIN_PASSWORD}`);
-    });
     
-    it('2. Enter existing phone number in not valid format in the "E-mail або номер телефону" field', async () => {
         for (const invalidNumber of invalidPhoneNumbers) {
             await homePage.emailField.setValue(invalidNumber);
             await homePage.submitButton.click();

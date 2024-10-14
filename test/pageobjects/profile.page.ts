@@ -157,6 +157,10 @@ class ProfilePage extends Page {
         return $('#map');
     }
 
+    get mapPopup() {
+        return $('[data-testid="div-mapPopup"]');
+    }
+
     get mapPopupTitle() {
         return $('[class*="MapPopup_title"]');
     }

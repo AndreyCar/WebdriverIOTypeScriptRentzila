@@ -1,11 +1,16 @@
 import Page from './page';
 
 class UnitPage extends Page {
-    readonly servicesProvided = 'div[class*=UnitCharacteristics_service]';
-    readonly servicesContainer = 'div[class*=UnitCharacteristics_services_container]';
+    get servicesProvided() {
+        return $$('div[class*=UnitCharacteristics_service]');
+    }
+ 
+    get servicesContainer() {
+        return $('div[class*=UnitCharacteristics_services_container]');
+    }
 
     async validateServiceProvided(expectedService: string) {
-        await $(this.servicesContainer).waitForDisplayed({ timeout: 30000 });
+        await this.servicesContainer.waitForDisplayed({ timeout: 30000 });
 
         const displayedServices = await this.getAllServices();
 
@@ -13,7 +18,7 @@ class UnitPage extends Page {
     }
 
     async getAllServices(): Promise<string[]> {
-        const servicesElements = $$(this.servicesProvided);
+        const servicesElements = this.servicesProvided;
         const servicesTextPromises = await servicesElements.map(async (serviceElement) => {
             return serviceElement.getText();
         });
@@ -23,12 +28,10 @@ class UnitPage extends Page {
     }
 
     async validatePageLoad() {
-        await $(this.servicesContainer).waitForDisplayed({
-            timeout: 3000, 
+        await this.servicesContainer.waitForDisplayed({
+            timeout: 10000, 
             timeoutMsg: 'Unit page did not load within the expected time',
         });
-        
-        console.log('Unit page has loaded successfully.');
     }
 }
 

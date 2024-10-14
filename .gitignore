@@ -1,3 +1,5 @@
 node_modules
 .env
 mochawesome-reports
+allure-results
+allure-report

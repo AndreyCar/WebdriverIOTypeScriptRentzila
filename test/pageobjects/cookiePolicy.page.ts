@@ -6,11 +6,11 @@ class CookiePolicyPage extends Page {
     }
 
     async scrollToFooter(): Promise<void> {
-        await $(this.footer).scrollIntoView();
+        await this.footer.scrollIntoView();
     }
 
     async isFooterDisplayed(): Promise<boolean> {
-        return await $(this.footer).isDisplayed();
+        return await this.footer.isDisplayed();
     }
 }
 

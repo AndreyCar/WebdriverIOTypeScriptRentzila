@@ -1,7 +1,15 @@
 export default class Page {
-    readonly advertsLink = 'a[class*="Navbar_link"][href="/products/"]';
-    readonly nabarLogo = 'a[class*="Navbar_logo"]';
-    readonly loginButton = 'div[class*="NavbarAuthBlock_buttonEnter"]';
+    get advertsLink() {
+        return $('a[class*="Navbar_link"][href="/products/"]');
+    }
+
+    get nabarLogo() {
+        return $('a[class*="Navbar_logo"]');
+    }
+
+    get loginButton() {
+        return $('div[class*="NavbarAuthBlock_buttonEnter"]');
+    }
 
     get emailField() {
         return $('#email');
@@ -59,7 +67,9 @@ export default class Page {
         return $$('[class*="CustomReactHookInput_error_input"]');
     }
 
-    readonly footer = 'div[class*="Footer_footer"]';
+    get footer() {
+        return $('div[class*="Footer_footer"]');
+    }
 
     get rentzilaFooterLogo() {
         return $('div[class*="Footer_footer"] [data-testid="logo"]');
@@ -101,7 +111,6 @@ export default class Page {
         return $('[data-testid="copyright"]');
     }
 
-
     get infoEmail() {
         return $('[href="mailto:info@rentzila.com.ua"]');
     }
@@ -126,20 +135,32 @@ export default class Page {
         return $$('div [role="alert"]');
     }
 
+    get relevantCategoriesUnits() {
+        return '[data-testid="thirdCategoryLabel"]';
+    }
+
+    get relevantCategoriesUnitsNames() {
+        return '[data-testid="thirdCategoryLabel"] p';
+    }
+
+    get telegramCrossButton() {
+        return $('[data-testid="completeTenderRectangle"] [data-testid="crossIcon"]');
+    }
+
     public open (path: string) {
         return browser.url(`${path}`)
     }
 
     async clickNavbarLogo() {
-        await $(this.nabarLogo).click();
+        await this.nabarLogo.click();
     }
 
     async clickAvertsLink() {
-        await $(this.advertsLink).click();
+        await this.advertsLink.click();
     }
 
     async clickLoginButton() {
-        await $(this.loginButton).click();
+        await this.loginButton.click();
     }
 
     async login(email: string, password: string) {
@@ -162,5 +183,16 @@ export default class Page {
                 timeoutMsg: 'Submit button did not disappear in time'
             }
         );
+    }
+
+    async getAllCategoriesUnitsNames(): Promise<string[]> {
+        const products = $$(this.relevantCategoriesUnits);
+        const namesPromises = await products.map(async (product) => {
+            const nameElement = product.$(this.relevantCategoriesUnitsNames);
+            return nameElement.getText();
+        });
+
+        const names = await Promise.all(namesPromises);
+        return names;
     }
 }

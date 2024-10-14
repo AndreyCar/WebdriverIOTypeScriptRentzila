@@ -1,8 +1,9 @@
-import { expect } from '@wdio/globals'
+import { expect } from '@wdio/globals';
 import homePage from '../../pageobjects/home.page';
 import profilePage from '../../pageobjects/profile.page';
+import { faker } from '@faker-js/faker';
 
-describe('id:C317 - Verify technical characteristics section', () => {
+describe('Verify technical characteristics section', () => {
     before(async () => {
         await browser.url('/create-unit/');
         await homePage.emailField.waitForDisplayed({ timeout: 5000 });
@@ -14,7 +15,7 @@ describe('id:C317 - Verify technical characteristics section', () => {
         await homePage.submitButton.click();
     });
 
-    it('1. Check title is visible, has valid text. Textarea is clickable and clear.', async () => {
+    it('id:C317 - Verify technical characteristics section', async () => {
         const title = profilePage.technicalCharacteristicsTitle;
         await expect(title).toBeDisplayedInViewport();
         await expect(title).toHaveText('Технічні характеристики');
@@ -22,38 +23,39 @@ describe('id:C317 - Verify technical characteristics section', () => {
         const textArea = profilePage.customTextArea;
         await expect(textArea).toBeDisplayed();
         await expect(textArea).toBeClickable();
-        await expect(textArea).toHaveText(''); 
-    });
+        await expect(textArea).toHaveText('');
 
-    it('2. Type data: <>{};^ (special symbols) and check field content. Repeat actions with copy-paste.', async () => {
         const specialSymbolsInput = '<>{};^';
-        const textArea = profilePage.customTextArea;
 
-        await textArea.clearValue();
-        await textArea.setValue(specialSymbolsInput);
+        await profilePage.customTextArea.clearValue();
+        await profilePage.customTextArea.setValue(specialSymbolsInput);
 
-        await expect(await textArea.getValue()).toEqual('');
+        await expect(await profilePage.customTextArea.getValue()).toEqual('');
 
-        await textArea.clearValue();
+        await profilePage.customTextArea.clearValue();
 
         await browser.execute((text) => {
             navigator.clipboard.writeText(text);
         }, specialSymbolsInput);
 
-        await textArea.click();
-        await browser.keys(['Control', 'v']); 
+        await profilePage.customTextArea.click();
+        await browser.keys(['Control', 'v']);
 
-        await expect(await textArea.getValue()).toEqual('');
-    });
+        await expect(await profilePage.customTextArea.getValue()).toEqual('');
 
-    it('3. Type 9001 symbols into textarea and check limit.', async () => {
-        const longInput = 'a'.repeat(9001); 
-        const textArea = profilePage.customTextArea;
+        const longInput = faker.string.alpha({ length: 9001 });
 
-        await textArea.clearValue();
-        await textArea.setValue(longInput);
+        await profilePage.customTextArea.clearValue();
+        await profilePage.customTextArea.setValue(longInput);
 
-        const textAreaValue = await textArea.getValue();
-        expect(textAreaValue.length).toBeLessThanOrEqual(9000);
+        // Wait until the text area value length is equal to 9000
+        let textAreaValue = await profilePage.customTextArea.getValue();
+        await browser.waitUntil(async () => {
+            textAreaValue = await profilePage.customTextArea.getValue();
+            return textAreaValue.length === 9000; // Check if length is 9000
+        }, {
+            timeout: 40000, // wait for a maximum of 10 seconds
+            timeoutMsg: 'Text area value did not reach length of 9000 within 40 seconds'
+        });
     });
 });

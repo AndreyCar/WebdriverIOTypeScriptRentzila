@@ -6,29 +6,60 @@ class HomePage extends Page {
         return $('h1[class*=HeroSection_title]');
     }
 
-    readonly serviceItemsNames = '[data-testid="services"] [class*=RentzilaProposes_proposes_list] > * [class*=RentzilaProposes_name]';
-    readonly serviceItems = '[data-testid="services"] [class*=RentzilaProposes_proposes_list] > *';
-    readonly servicesSection = '[data-testid="services"]';
-    readonly popularTab = '[data-testid="services__populyarni"';
-    readonly serviceAgriculturalTab = '[data-testid="services__silskogospodarski"]';
-    readonly serviceBuildingTab = '[data-testid="services__budivelni"]';
-    readonly serviceTabOther = '[data-testid="services__inshi"]';
-
-    readonly specialEquipmentSection = '[data-testid="specialEquipment"]';
-    readonly specialEquipmentPopularTab = '[data-testid="specialEquipment__populyarna"]';
-    readonly specialEquipmentAgriculturalTab = '[data-testid="specialEquipment__silskogospodarska"]';
-    readonly specialEquipmentBuildingTab = '[data-testid="specialEquipment__budivelna"]';
-    readonly specialEquipmentTabOther = '[data-testid="specialEquipment__insha"]';
-    readonly specialEquipmentItems = '[data-testid="specialEquipment"] [class*=RentzilaProposes_proposes_list] > *';
-    readonly specialEquipmentItemsNames = '[data-testid="specialEquipment"] [class*=RentzilaProposes_proposes_list] > * [class*=RentzilaProposes_name]';
-
-    async scrollToServicesSection(): Promise<void> {
-        await $(this.servicesSection).scrollIntoView();
+    get serviceItemsNames() {
+        return '[data-testid="services"] [class*=RentzilaProposes_proposes_list] > * [class*=RentzilaProposes_name]';
     }
 
-    async scrollToSpecialEquipmentSection(): Promise<void> {
-        const specialEquipmentSectionElement = $(this.specialEquipmentSection);
-        await specialEquipmentSectionElement.scrollIntoView();
+    get serviceItems() {
+        return '[data-testid="services"] [class*=RentzilaProposes_proposes_list] > *';
+    }
+
+    get servicesSection() {
+        return '[data-testid="services"]';
+    }
+
+    get popularTab() {
+        return '[data-testid="services__populyarni"]';
+    }
+
+    get serviceAgriculturalTab() {
+        return '[data-testid="services__silskogospodarski"]';
+    }
+
+    get serviceBuildingTab() {
+        return '[data-testid="services__budivelni"]';
+    }
+
+    get serviceTabOther() {
+        return '[data-testid="services__inshi"]';
+    }
+
+    get specialEquipmentSection() {
+        return '[data-testid="specialEquipment"]';
+    }
+
+    get specialEquipmentPopularTab() {
+        return '[data-testid="specialEquipment__populyarna"]';
+    }
+
+    get specialEquipmentAgriculturalTab() {
+        return '[data-testid="specialEquipment__silskogospodarska"]';
+    }
+
+    get specialEquipmentBuildingTab() {
+        return '[data-testid="specialEquipment__budivelna"]';
+    }
+
+    get specialEquipmentTabOther() {
+        return '[data-testid="specialEquipment__insha"]';
+    }
+
+    get specialEquipmentItems() {
+        return '[data-testid="specialEquipment"] [class*=RentzilaProposes_proposes_list] > *';
+    }
+
+    get specialEquipmentItemsNames() {
+        return '[data-testid="specialEquipment"] [class*=RentzilaProposes_proposes_list] > * [class*=RentzilaProposes_name]';
     }
 
     async getAllItemNames(): Promise<string[]> {
@@ -88,7 +119,7 @@ class HomePage extends Page {
     }
 
     async scrollToFooter(): Promise<void> {
-        await $(this.footer).scrollIntoView();
+        await this.footer.scrollIntoView();
     }
 
     async scrollToConsultationSection(): Promise<void> {
@@ -96,7 +127,7 @@ class HomePage extends Page {
     }
 
     async isFooterDisplayed(): Promise<boolean> {
-        return await $(this.footer).isDisplayed();
+        return await this.footer.isDisplayed();
     }
 
     async clickServiceTab(serviceTabLocator: string) {
@@ -115,6 +146,14 @@ class HomePage extends Page {
         expect($(this.consultationSectionPhoneNumberField)).toHaveAttr('class', /ConsultationForm_error/);
     
         expect(this.consultationErrorMessagesList[1]).toHaveText(errorMessages.phoneValidationError);
+    }
+
+    async secviceItemClickByIndex(index: number) {
+        await $$(this.serviceItems)[index].click()
+    }
+
+    async specialEquipmentItemClickByIndex(index: number) {
+        await $$(this.specialEquipmentItems)[index].click()
     }
 }
 
