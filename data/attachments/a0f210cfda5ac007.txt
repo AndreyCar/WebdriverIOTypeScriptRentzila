@@ -1,0 +1,31 @@
+{
+  "actions": [
+    {
+      "type": "pointer",
+      "id": "mouse",
+      "parameters": {
+        "pointerType": "mouse"
+      },
+      "actions": [
+        {
+          "type": "pointerMove",
+          "duration": 0,
+          "x": 780,
+          "y": 540
+        },
+        {
+          "type": "pointerDown",
+          "button": 0
+        },
+        {
+          "type": "pointerUp",
+          "button": 0
+        },
+        {
+          "type": "pause",
+          "duration": 1000
+        }
+      ]
+    }
+  ]
+}
