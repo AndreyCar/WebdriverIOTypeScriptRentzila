@@ -21,6 +21,7 @@ export const config: Options.Testrunner = {
 
     capabilities: [
         {
+            maxInstances: 5,
             browserName: 'chrome',
             'goog:chromeOptions': {
                 args: ['headless', 'disable-gpu'],
