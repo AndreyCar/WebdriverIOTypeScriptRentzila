@@ -43,19 +43,23 @@ describe('Verify technical characteristics section', () => {
 
         await expect(await profilePage.customTextArea.getValue()).toEqual('');
 
-        const longInput = faker.string.alpha({ length: 9001 });
+        let longInput = '';
+        for (let i = 0; i < 100; i++) longInput += faker.string.alpha({ length: 90 }) + ' ';
 
         await profilePage.customTextArea.clearValue();
         await profilePage.customTextArea.setValue(longInput);
 
         // Wait until the text area value length is equal to 9000
         let textAreaValue = await profilePage.customTextArea.getValue();
-        await browser.waitUntil(async () => {
-            textAreaValue = await profilePage.customTextArea.getValue();
-            return textAreaValue.length === 9000; // Check if length is 9000
-        }, {
-            timeout: 40000, // wait for a maximum of 10 seconds
-            timeoutMsg: 'Text area value did not reach length of 9000 within 40 seconds'
-        });
+        await browser.waitUntil(
+            async () => {
+                textAreaValue = await profilePage.customTextArea.getValue();
+                return textAreaValue.length === 9000; // Check if length is 9000
+            },
+            {
+                timeout: 40000, // wait for a maximum of 10 seconds
+                timeoutMsg: 'Text area value did not reach length of 9000 within 40 seconds',
+            }
+        );
     });
 });
