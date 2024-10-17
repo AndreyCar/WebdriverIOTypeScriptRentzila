@@ -17,7 +17,7 @@ export const config: Options.Testrunner = {
 
     exclude: [],
 
-    maxInstances: 1,
+    maxInstances: 10,
 
     capabilities: [
         {
