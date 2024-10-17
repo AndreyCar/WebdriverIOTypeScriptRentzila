@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "tests": "wdio run ./wdio.conf.ts --spec test/specs/generalInfoTab/verifyDescriptionSection.e2e.ts",
+    "tests": "wdio run ./wdio.conf.ts",
     "headed": "wdio run ./wdio.conf.headed.ts",
     "allure:generate": "allure generate allure-results --clean -o allure-report",
     "allure:open": "allure open allure-report"
