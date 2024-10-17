@@ -2,23 +2,21 @@ import type { Options } from '@wdio/types';
 
 require('dotenv').config();
 
-export const config: Options.Testrunner = {
+export const config = {
     runner: 'local',
     tsConfigPath: './tsconfig.json',
 
     before: async function (capabilities, specs) {
         await browser.url('/');
         await browser.maximizeWindow();
-
-        require('dotenv').config();
     },
 
     specs: ['./test/specs/**/*.ts'],
 
     exclude: [],
 
-    maxInstances: 10,
-
+    maxInstances: 5,
+    maxInstancesPerCapability: 5,
     capabilities: [
         {
             maxInstances: 5,
