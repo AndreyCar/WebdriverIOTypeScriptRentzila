@@ -1,45 +1,76 @@
 name: Run WebdriverIO Tests
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
 
 jobs:
-  wdio-tests:
-    runs-on: ubuntu-latest
+    wdio-tests:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 22
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20.18.0
 
-      - name: Install dependencies
-        run: npm install
+            - name: Install dependencies
+              run: npm install
 
-      - name: Load environment variables
-        run: |
-          echo "ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}" >> $GITHUB_ENV
-          echo "ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}" >> $GITHUB_ENV
-          echo "ADMIN_PHONE_NUMBER=${{ secrets.ADMIN_PHONE_NUMBER }}" >> $GITHUB_ENV
-          echo "BASE_URL=${{ secrets.BASE_URL }}" >> $GITHUB_ENV
-      - name: Run WebdriverIO tests
-        run: npm run tests
-        
-      - name: Generate Allure report
-        if: always()
-        run: npm run allure:generate
+            - name: Load environment variables
+              run: |
+                  echo "ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}" >> $GITHUB_ENV
+                  echo "ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}" >> $GITHUB_ENV
+                  echo "ADMIN_PHONE_NUMBER=${{ secrets.ADMIN_PHONE_NUMBER }}" >> $GITHUB_ENV
+                  echo "BASE_URL=${{ secrets.BASE_URL }}" >> $GITHUB_ENV
+            - name: Run WebdriverIO tests
+              run: npm run tests
 
-      - name: Upload Allure report as GitHub artifact
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: allure-report
-          path: allure-report
+            - name: Generate Allure report
+              if: always()
+              run: |
+                  if [ -d "allure-results" ]; then
+                    npm run allure:generate
+                  else
+                    echo "allure-results directory not found"
+                    exit 1
+                  fi
+
+            - name: Upload Allure report as artifact
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: allure-report
+                  path: allure-report
+
+            - name: Deploy Allure Report to GitHub Pages
+              if: always()
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  # Set up git
+                  git config --global user.email "github-actions[bot]@users.noreply.github.com"
+                  git config --global user.name "github-actions[bot]"
+
+                  # Check out the gh-pages branch
+                  git fetch origin gh-pages || git checkout --orphan gh-pages
+                  git worktree add gh-pages gh-pages
+                  cd gh-pages
+
+                  # Clear the gh-pages branch content
+                  rm -rf ./*
+
+                  # Copy the Allure report to the gh-pages branch
+                  cp -R ../allure-report/* .
+
+                  # Commit and push the report to the gh-pages branch
+                  git add .
+                  git commit -m "Update Allure report"
+                  git push origin gh-pages

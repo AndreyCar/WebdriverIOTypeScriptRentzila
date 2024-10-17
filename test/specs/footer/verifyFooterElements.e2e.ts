@@ -64,7 +64,15 @@ describe('Verify that all elements on the footer are displayed and all links are
     
         await advertsPage.clickNavbarLogo();
 
+        await browser.waitUntil(
+            async () => (await browser.getUrl()) === 'https://dev.rentzila.com.ua/',
+            {
+                timeout: 20000, 
+                timeoutMsg: 'Expected URL to be https://dev.rentzila.com.ua/ after 20 seconds',
+            }
+        );
         await expect(browser).toHaveUrl('https://dev.rentzila.com.ua/');
+
 
         await expect(homePage.header).toBeDisplayedInViewport();
         await expect(homePage.header).toHaveText('Сервіс пошуку послуг спецтехніки');
@@ -79,6 +87,13 @@ describe('Verify that all elements on the footer are displayed and all links are
     
         await tendersPage.rentzilaLogo.click();
 
+        await browser.waitUntil(
+            async () => (await browser.getUrl()) === 'https://dev.rentzila.com.ua/',
+            {
+                timeout: 20000, 
+                timeoutMsg: 'Expected URL to be https://dev.rentzila.com.ua/ after 20 seconds',
+            }
+        );
         await expect(browser).toHaveUrl('https://dev.rentzila.com.ua/');
     
         expect(await homePage.infoEmail.getAttribute('href')).toBe('mailto:info@rentzila.com.ua');

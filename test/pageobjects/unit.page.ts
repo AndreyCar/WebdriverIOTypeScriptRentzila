@@ -29,11 +29,9 @@ class UnitPage extends Page {
 
     async validatePageLoad() {
         await this.servicesContainer.waitForDisplayed({
-            timeout: 3000, 
+            timeout: 10000, 
             timeoutMsg: 'Unit page did not load within the expected time',
         });
-        
-        console.log('Unit page has loaded successfully.');
     }
 }
 

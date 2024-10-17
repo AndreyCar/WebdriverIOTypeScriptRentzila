@@ -27,6 +27,7 @@ describe('Authorization with valid phone and password', () => {
         await homePage.userIcon.click();
         await profilePage.logoutDropdownMenu.click();
         
+        await homePage.loginButton.waitForDisplayed({ timeout: 20000 });
         await homePage.clickLoginButton();
         await homePage.emailField.setValue(`${process.env.ADMIN_PHONE_NUMBER}`);
         await expect(homePage.emailField).not.toHaveAttr('class', /CustomReactHookInput_error_input/);

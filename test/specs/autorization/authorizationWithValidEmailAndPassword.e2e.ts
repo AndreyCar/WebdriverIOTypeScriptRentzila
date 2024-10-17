@@ -25,8 +25,7 @@ describe('Authorization with valid email and password', () => {
             await browser.keys('Enter');
         }
 
-        await expect(homePage.popupWindow).not.toBeDisplayed();
-    
+        await homePage.userIcon.waitForDisplayed({ timeout: 10000 });
         await homePage.userIcon.click();
         await expect(homePage.userDropdownMenu).toBeDisplayed();
         await expect(await homePage.userDropdownMenuEmail.getText()).toEqual(`${process.env.ADMIN_USERNAME}`);

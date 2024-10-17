@@ -7,6 +7,7 @@ describe('Authorization with invalid email', () => {
     it('id:C576 - Authorization with invalid email', async () => {
         await homePage.clickLoginButton();
 
+        await homePage.emailField.waitForDisplayed({ timeout: 20000 });
         await expect(homePage.emailField).toBeDisplayed();
         await homePage.emailField.setValue('testuser  rentzila@gmail.com');
 
